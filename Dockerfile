@@ -1,4 +1,4 @@
-FROM php:7.3.33-fpm
+FROM php:7.4-fpm
 
 
 # Set the working directory in the container
@@ -15,7 +15,6 @@ RUN apt-get update && \
     libxml2-dev \
     git \
     unzip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     && docker-php-ext-install zip intl xml
 
@@ -29,9 +28,9 @@ COPY . .
 RUN composer install --no-dev --no-scripts --prefer-dist
 
 # Run Laravel artisan commands to optimize application
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
+# RUN php artisan config:cache \
+#     && php artisan route:cache \
+#     && php artisan view:cache
 
 # Expose port 9000 for PHP-FPM
 EXPOSE 9000
