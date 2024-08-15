@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Laravel application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    restart: unless-stopped
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=laravel
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=secret
+    ports:
+      - "8000:9000" # Maps port 9000 inside the container to port 8000 on the host machine
+    volumes:
+      - .:/var/www
+    networks:
+      - laravel_network
+    depends_on:
+      - db
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: #d
+    ports:
+      - "3306:3306" # Exposes the MySQL port to the host machine
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - laravel_network
+
+# Volumes for data persistence
+volumes:
+  db_data:
+
+# Custom network for the application
+networks:
+  laravel_network:
+    driver: bridge
