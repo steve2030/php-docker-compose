@@ -10,9 +10,9 @@ services:
     restart: unless-stopped
     environment:
       - DB_HOST=db
-      - DB_DATABASE=laravel
-      - DB_USERNAME=laravel
-      - DB_PASSWORD=secret
+      - DB_DATABASE=uzapoint
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
     ports:
       - "8000:9000" # Maps port 9000 inside the container to port 8000 on the host machine
     volumes:
@@ -29,9 +29,9 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: #d
+      MYSQL_DATABASE: uzapoint
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     ports:
       - "3306:3306" # Exposes the MySQL port to the host machine
     volumes:
@@ -39,6 +39,20 @@ services:
     networks:
       - laravel_network
 
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      - PMA_HOST=db
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    ports:
+      - "8080:80" # Maps port 80 inside the container to port 8080 on the host machine
+    depends_on:
+      - db
+    networks:
+      - laravel_network
 # Volumes for data persistence
 volumes:
   db_data:
